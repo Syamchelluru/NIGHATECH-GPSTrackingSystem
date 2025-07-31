@@ -1,7 +1,7 @@
-// models/User.ts
+// lib/models/device.model.ts
 import mongoose from 'mongoose';
 
-const UserSchema = new mongoose.Schema(
+const DeviceSchema = new mongoose.Schema(
   {
     name: String,
     email: { type: String, required: true, unique: true },
@@ -13,4 +13,4 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.models.User || mongoose.model('User', UserSchema);
+export default mongoose.models.Device || mongoose.model('Device', DeviceSchema);
