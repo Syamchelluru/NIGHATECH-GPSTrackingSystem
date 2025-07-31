@@ -1,7 +1,7 @@
 'use client';
 
 import 'leaflet/dist/leaflet.css';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import { Icon } from 'leaflet';
 import React from 'react';
 
@@ -12,8 +12,14 @@ interface Device {
   location: { lat: number; lng: number };
 }
 
+interface LocationPoint {
+  lat: number;
+  lng: number;
+}
+
 interface Props {
   devices: Device[];
+  path?: LocationPoint[]; // Optional path prop
 }
 
 const greenIcon = new Icon({
@@ -34,8 +40,9 @@ const redIcon = new Icon({
   shadowSize: [41, 41],
 });
 
-export function MapComponent({ devices }: Props) {
-  const defaultPosition = devices[0]?.location || { lat: 20.5937, lng: 78.9629 }; // India center
+export function MapComponent({ devices, path }: Props) {
+  const defaultPosition =
+    devices[0]?.location || path?.[0] || { lat: 20.5937, lng: 78.9629 };
 
   return (
     <MapContainer
@@ -55,11 +62,19 @@ export function MapComponent({ devices }: Props) {
           icon={device.isOnline ? greenIcon : redIcon}
         >
           <Popup>
-            <strong>{device.name}</strong><br />
+            <strong>{device.name}</strong>
+            <br />
             Status: {device.isOnline ? 'Online' : 'Offline'}
           </Popup>
         </Marker>
       ))}
+      {path && path.length > 0 && (
+        <Polyline
+          positions={path.map(({ lat, lng }) => [lat, lng])}
+          color="blue"
+          weight={4}
+        />
+      )}
     </MapContainer>
   );
 }

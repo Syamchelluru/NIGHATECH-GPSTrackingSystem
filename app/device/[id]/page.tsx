@@ -65,6 +65,16 @@ export default function DeviceDetailPage() {
     );
   }
 
+  // Prepare devices array for the MapComponent (required prop)
+  const devicesForMap = [
+    {
+      id: device.id,
+      name: device.name,
+      isOnline: device.status === 'online',
+      location: device.path[0] ? { lat: device.path[0].lat, lng: device.path[0].lng } : { lat: 20.5937, lng: 78.9629 },
+    },
+  ];
+
   return (
     <ProtectedRoute>
       <div className="flex h-screen bg-gray-50">
@@ -156,7 +166,8 @@ export default function DeviceDetailPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="h-96">
-                    <MapComponent path={device.path} />
+                    {/* Pass both devices and path */}
+                    <MapComponent devices={devicesForMap} path={device.path} />
                   </div>
                 </CardContent>
               </Card>
