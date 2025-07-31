@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { connectDB } from '@/lib/db';
+import connectDB from '@/lib/db'; // ✅ Fixed: default import
 import DeviceModel from '@/lib/models/device.model';
 
 export async function GET() {
