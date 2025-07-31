@@ -1,14 +1,26 @@
 // app/dashboard/user/page.tsx
 'use client';
 
+
 import { useState, useEffect } from 'react';
 import { ProtectedRoute } from '@/components/layout/protected-route';
 import { Sidebar } from '@/components/layout/sidebar';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/components/providers';
-import { MapPin, Smartphone, Activity, Eye, Clock } from 'lucide-react';
-import { MapComponent } from '@/components/map/map-component';
+import { MapPin, Smartphone, Activity, Clock } from 'lucide-react';
+import dynamic from 'next/dynamic';
+
+// 👇 Dynamically import MapComponent to prevent SSR issues
+const MapComponent = dynamic(() => import('@/components/map/map-component'), {
+  ssr: false,
+});
 
 interface Device {
   id: string;
@@ -42,7 +54,6 @@ export default function UserDashboardPage() {
         assignedTo: user?.email,
       },
     ];
-
     setDevices(mockDevices);
   }, [user]);
 

@@ -19,11 +19,12 @@ interface LocationPoint {
 
 interface Props {
   devices: Device[];
-  path?: LocationPoint[]; // Optional path prop
+  path?: LocationPoint[];
 }
 
 const greenIcon = new Icon({
-  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png',
+  iconUrl:
+    'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png',
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
   iconSize: [25, 41],
   iconAnchor: [12, 41],
@@ -32,7 +33,8 @@ const greenIcon = new Icon({
 });
 
 const redIcon = new Icon({
-  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+  iconUrl:
+    'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
   iconSize: [25, 41],
   iconAnchor: [12, 41],
@@ -41,8 +43,7 @@ const redIcon = new Icon({
 });
 
 export function MapComponent({ devices, path }: Props) {
-  const defaultPosition =
-    devices[0]?.location || path?.[0] || { lat: 20.5937, lng: 78.9629 };
+  const defaultPosition = devices[0]?.location || path?.[0] || { lat: 20.5937, lng: 78.9629 };
 
   return (
     <MapContainer
@@ -78,3 +79,6 @@ export function MapComponent({ devices, path }: Props) {
     </MapContainer>
   );
 }
+
+// 👇 Needed for dynamic import to work
+export default MapComponent;
