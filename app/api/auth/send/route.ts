@@ -1,42 +1,40 @@
-// app/api/auth/send/route.ts
-
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 import nodemailer from 'nodemailer';
 
-export const dynamic = 'force-dynamic';
-
 export async function POST(req: Request) {
-  const { email, name } = await req.json();
-  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+  const { email, otp } = await req.json();
 
-  // Save OTP and user info in cookies (5 minutes)
-  const cookieStore = cookies();
-  cookieStore.set('otp', otp, { maxAge: 300, httpOnly: true });
-  cookieStore.set('user-info', JSON.stringify({ email, name }), { maxAge: 300, httpOnly: true });
-
-  // Send Email with OTP using Gmail SMTP
   const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: process.env.EMAIL_HOST,
+    port: Number(process.env.EMAIL_PORT),
+    secure: false,
     auth: {
-      user: process.env.EMAIL_USER!,
-      pass: process.env.EMAIL_PASS!,
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
     },
   });
 
   const mailOptions = {
-    from: `"NighaTech" <${process.env.EMAIL_USER}>`,
+    from: `"NighaTech Support" <${process.env.EMAIL_USER}>`,
     to: email,
-    subject: 'Your OTP Code',
-    text: `Hello ${name || ''},\n\nYour OTP is: ${otp}\nIt is valid for 5 minutes.\n\nThanks,\nNighaTech Team`,
+    subject: 'WELCOME to NIGHATECH-GPSTracker',
+    html: `
+      <div style="font-family: Arial, sans-serif; line-height: 1.5;">
+        <h2 style="color: #2E86C1;">WELCOME</h2>
+        <p><strong>NIGHATECH-GPSTracker One Time Password (OTP) is:</strong></p>
+        <p style="font-size: 24px; font-weight: bold;">${otp}</p>
+        <p>Please do not share this OTP with anyone.</p>
+        <br/>
+        <p>Thank you,<br/>NighaTech Team</p>
+      </div>
+    `,
   };
 
   try {
     await transporter.sendMail(mailOptions);
-    console.log(`✅ OTP sent to ${email}: ${otp}`);
-    return NextResponse.json({ success: true, message: 'OTP sent to email' });
+    return NextResponse.json({ success: true, message: 'OTP sent successfully' });
   } catch (error) {
-    console.error('❌ Error sending email:', error);
+    console.error('Error sending OTP:', error);
     return NextResponse.json({ success: false, message: 'Failed to send OTP' }, { status: 500 });
   }
 }
